@@ -55,7 +55,7 @@ void display_users(soci::session& sql) {
 
 struct Option{
     
-    int value = 0;
+    int value = -1;
     
     enum class Description{
         LIST,
@@ -65,7 +65,23 @@ struct Option{
         INVALID
     };
     
-    auto get_description() -> Option::Description{
+    
+    static auto get_prompt() -> const std::string{
+        return 
+            "Options: \n"
+            "\t 1 : List all users \n"
+            "\t 2 : Add an entry to users \n"
+            "\t 3 : Delete an entry from users \n"
+            "\t 4 : Exit  \n\n"
+            "> Please select an option: ";
+    }
+
+    auto get_value_from_prompt() -> void{
+        value = -1;
+        get_data(Option::get_prompt(), value);
+    }
+
+    auto get_description() const -> Option::Description{
         Option::Description optionDescription = Option::Description::INVALID;
 
         if     (1 == value) optionDescription = Option::Description::LIST;
@@ -74,7 +90,7 @@ struct Option{
         else if(4 == value) optionDescription = Option::Description::QUIT;
 
         return optionDescription;
-    };
+    }
 };
 
 int main() {
@@ -90,18 +106,9 @@ int main() {
         Option option;        
         using OptionDescription = Option::Description;
 
-        std::string optionsMessage = 
-            "Options: \n"
-            "\t 1 : List all users \n"
-            "\t 2 : Add an entry to users \n"
-            "\t 3 : Delete an entry from users \n"
-            "\t 4 : Exit  \n\n"
-            "> Please select an option: ";
-        
         while (!quit){
             // Get option
-            option.value = -1;
-            get_data(optionsMessage, option.value);
+            option.get_value_from_prompt();
             
             // Excercise option
             if (OptionDescription::LIST == option.get_description()){
