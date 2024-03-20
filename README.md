@@ -1,5 +1,6 @@
 # demoSQLwCpp
-Demo of how to use the soci library with a MySQL db on an Ubuntu OS. This demo was inspired by this post: https://dane-bulat.medium.com/working-with-databases-in-c-an-introduction-7d6a6a78ae66
+Demo of how to use the soci library with a MySQL db on an Ubuntu OS.  
+This demo was inspired by the post: https://dane-bulat.medium.com/working-with-databases-in-c-an-introduction-7d6a6a78ae66
 
 ## Install prerequisites
 
@@ -14,9 +15,8 @@ Install cmake:
 sudo apt install cmake
 ```
 
-Install MySQL server
-If running Ubuntu in a Windows Subsystem for Linux enable systemd(https://learn.microsoft.com/en-us/windows/wsl/systemd#how-to-enable-systemd).
-Edit (or create) ```/etc/wsl.conf``` to add:
+Install MySQL server:  
+If running Ubuntu in a Windows Subsystem for Linux enable systemd(https://learn.microsoft.com/en-us/windows/wsl/systemd#how-to-enable-systemd). Edit (or create) ```/etc/wsl.conf``` to add:
 ```
 [boot]
 systemd=true
@@ -32,16 +32,16 @@ Install libmysqlclient:
 sudo apt-get install mysqlclient
 ```
 
-Check the mysqlclient library and include location:
+Check the mysqlclient library install:   
+The include location at:
 ```
 ls /usr/include/mysql
 ```
-should contain the library includes (*.h files)
-Check the mysqlclient library location:
+should contain the library includes (\*.h files). The library location at:
 ```
 ls /usr/lib/mysql/plugin
 ```
-should contain the library shared objects (*.so files)
+should contain the library shared objects (\*.so files).
 
 ### Creating the MySQL test_db and creating a user
 
@@ -68,7 +68,7 @@ mysql> exit
 
 ## Install soci
 
-####Clone the soci repo and use cmake to install it:
+Clone the soci repo and use cmake to install it:
 ```
 git clone https://github.com/SOCI/soci.git
 git checkout -b release/4.0 
@@ -85,14 +85,14 @@ Verify the install by checking these locations for header files:
 ls ls /usr/local/include/soci
 ls /usr/local/include/soci/mysql
 ``` 
-and this location for shared objects (libsoci_*.so.*):
+and this location for shared objects (libsoci_\*.so.\*):
 ```
 ls /usr/local/lib/
 ```
 
 ## Compile C++ and run
 
-Set some environnment variables:
+Set some environment variables:
 ```
 export CPATH="/usr/local/include/soci:/usr/include/mysql"
 export LD_LIBRARY_PATH="/usr/local/lib:/usr/lib/mysql"
