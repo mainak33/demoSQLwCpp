@@ -53,21 +53,25 @@ void display_users(soci::session& sql) {
     }
 }
 
-struct Options{
-    enum class E_options{
+struct Option{
+    
+    int value = 0;
+    
+    enum class Description{
         LIST,
         ADD,
         DELETE,
         QUIT,
         INVALID
     };
-    auto operator()(int optionIn) -> Options::E_options{
-        Options::E_options optionDescription = Options::E_options::INVALID;
+    
+    auto get_description() -> Option::Description{
+        Option::Description optionDescription = Option::Description::INVALID;
 
-        if     (1 == optionIn) optionDescription = Options::E_options::LIST;
-        else if(2 == optionIn) optionDescription = Options::E_options::ADD;
-        else if(3 == optionIn) optionDescription = Options::E_options::DELETE;
-        else if(4 == optionIn) optionDescription = Options::E_options::QUIT;
+        if     (1 == value) optionDescription = Option::Description::LIST;
+        else if(2 == value) optionDescription = Option::Description::ADD;
+        else if(3 == value) optionDescription = Option::Description::DELETE;
+        else if(4 == value) optionDescription = Option::Description::QUIT;
 
         return optionDescription;
     };
@@ -82,11 +86,9 @@ int main() {
 
         // Initializations
         std::string first_name, last_name, email;
-        int optionValue = -1;
         bool quit = false;
-        Options options;        
-        using OptionDescriptions = Options::E_options;
-        OptionDescriptions optionDescription = OptionDescriptions::INVALID;
+        Option option;        
+        using OptionDescription = Option::Description;
 
         std::string optionsMessage = 
             "Options: \n"
@@ -98,15 +100,14 @@ int main() {
         
         while (!quit){
             // Get option
-            optionValue = -1;
-            get_data(optionsMessage, optionValue);
-            optionDescription = options(optionValue);
+            option.value = -1;
+            get_data(optionsMessage, option.value);
             
             // Excercise option
-            if (OptionDescriptions::LIST == optionDescription){
+            if (OptionDescription::LIST == option.get_description()){
                 // Retrieve all rows from users table and output data
                 display_users(sql);
-            }else if (OptionDescriptions::ADD == optionDescription){
+            }else if (OptionDescription::ADD == option.get_description()){
                 get_data("> Enter first name: ", first_name);
                 get_data("> Enter last name: ", last_name);
                 get_data("> Enter email address: ", email);
@@ -116,12 +117,12 @@ int main() {
 
                 // Retrieve all rows from users table and output data
                 display_users(sql);
-            }else if (OptionDescriptions::DELETE == optionDescription){
+            }else if (OptionDescription::DELETE == option.get_description()){
                 int idToDelete = -1;
                 get_data("> Enter id of user to be deleted: ", idToDelete);
                 if (idToDelete >= 0)
                     delete_user(sql,idToDelete);
-            }else if (OptionDescriptions::QUIT == optionDescription){
+            }else if (OptionDescription::QUIT == option.get_description()){
                 quit = true;
             }else{
                 std::cout << "> Invalid option selected." << std::endl << std::endl;
